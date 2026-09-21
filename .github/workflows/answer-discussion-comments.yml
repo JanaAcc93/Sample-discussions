@@ -1,0 +1,36 @@
+name: Answer Salesforce Deployment Bot Comments
+
+# Answers questions posted as comments on the pinned "guide me" discussion
+# (see repository variable GUIDE_DISCUSSION_NUMBER). Users click into that
+# single discussion, comment their question, and the bot replies inline.
+
+on:
+  discussion_comment:
+    types: [created]
+
+permissions:
+  discussions: write
+
+jobs:
+  answer:
+    runs-on: ubuntu-latest
+    if: |
+      github.event.discussion.number == fromJSON(vars.GUIDE_DISCUSSION_NUMBER) &&
+      github.event.comment.user.login != 'github-actions[bot]'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Answer the comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCUSSION_NODE_ID: ${{ github.event.discussion.node_id }}
+          COMMENT_NODE_ID: ${{ github.event.comment.node_id }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
+        run: python discussion_comment_responder.py

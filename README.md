@@ -14,19 +14,33 @@ python bot.py
 Ask a question, e.g. "what's the difference between managed and unlocked packages?", and the bot
 replies with a canned answer. Type `exit` to quit.
 
-## GitHub Discussions integration
+## GitHub Discussions integration ("Guide Me" bot thread)
 
-A GitHub Actions workflow ([.github/workflows/answer-discussions.yml](.github/workflows/answer-discussions.yml))
-automatically answers new posts in the repo's **Q&A** Discussions category:
+A single pinned Discussion acts as the entry point to the bot — click into it, post your question as
+a comment, and the bot replies inline in the same thread.
 
-1. Someone opens a new Discussion under the "Q&A" category asking about a Salesforce deployment topic.
-2. The workflow triggers on the `discussion` event, runs `discussion_responder.py`, which matches the
-   discussion title/body against `knowledge_base.py` using the same logic as `bot.py`.
-3. The bot posts the matched answer (or a fallback message) as a reply comment on the discussion via
-   the GitHub GraphQL API.
+**One-time setup:**
 
-No extra setup is required beyond having GitHub Discussions enabled on the repository — the workflow
-uses the built-in `GITHUB_TOKEN` with `discussions: write` permission.
+1. Create a new Discussion (see suggested title/body below) and pin it from the **⋯** menu so it's
+   always visible at the top of the Discussions tab.
+2. Note its discussion number (from the URL, e.g. `.../discussions/5` → `5`).
+3. In the repo, go to **Settings → Secrets and variables → Actions → Variables** and add a repository
+   variable named `GUIDE_DISCUSSION_NUMBER` set to that number.
+
+Suggested title/body for the pinned discussion:
+
+> **Title:** 🧭 Guide Me — Ask the Salesforce Deployment Bot
+>
+> **Body:** Reply to this discussion with your question about Salesforce deployment components
+> (change sets, packaging, scratch orgs, CI/CD, DevOps Center, permission sets, naming conventions,
+> etc.) and the bot will answer inline.
+
+**How it works:** the workflow ([.github/workflows/answer-discussion-comments.yml](.github/workflows/answer-discussion-comments.yml))
+triggers on the `discussion_comment` event, checks that the comment was posted on the discussion
+number stored in `GUIDE_DISCUSSION_NUMBER` (and isn't from the bot itself), runs
+`discussion_comment_responder.py` to match the comment text against `knowledge_base.py` (same logic
+as `bot.py`), and posts the answer as a threaded reply via the GitHub GraphQL API using the built-in
+`GITHUB_TOKEN` with `discussions: write` permission.
 
 ## Extending
 
