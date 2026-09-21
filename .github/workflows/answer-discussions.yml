@@ -1,0 +1,29 @@
+name: Answer Salesforce Deployment Discussions
+
+on:
+  discussion:
+    types: [created]
+
+permissions:
+  discussions: write
+
+jobs:
+  answer:
+    runs-on: ubuntu-latest
+    if: github.event.discussion.category.slug == 'q-a'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Answer the discussion
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCUSSION_NODE_ID: ${{ github.event.discussion.node_id }}
+          DISCUSSION_TITLE: ${{ github.event.discussion.title }}
+          DISCUSSION_BODY: ${{ github.event.discussion.body }}
+        run: python discussion_responder.py
