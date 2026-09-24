@@ -6,11 +6,23 @@ from knowledge_base import KNOWLEDGE_BASE, FALLBACK_ANSWER
 def get_answer(question: str) -> str:
     """Return the best matching canned answer for a question, or a fallback."""
     question_lower = question.lower()
+    is_definition_question = (
+        any(
+            phrase in question_lower
+            for phrase in ("what is", "what's", "define", "explain")
+        )
+        and not any(
+            phrase in question_lower
+            for phrase in ("naming", "convention", "standard")
+        )
+    )
 
     best_match = None
     best_score = 0
     for entry in KNOWLEDGE_BASE:
         score = sum(1 for keyword in entry["keywords"] if keyword in question_lower)
+        if score and is_definition_question and entry.get("answer_type") == "definition":
+            score += 10
         if score > best_score:
             best_score = score
             best_match = entry

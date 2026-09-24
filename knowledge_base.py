@@ -98,74 +98,313 @@ KNOWLEDGE_BASE = [
         "packages) and testing deployments in a full or partial sandbox copy that mirrors production "
         "dependencies before deploying to production.",
     },
+]
+
+# Salesforce does not mandate one universal naming standard. These conventions are
+# designed for source-driven development and use PEP as this org's identifier.
+NAMING_STANDARDS = [
     {
-        "keywords": ["naming convention", "department", "role-based", "custom object"],
-        "answer": "Q: What's the role-based naming convention for a Custom Object? (Good for large "
-        "teams with multiple admins/developers)\n"
-        "A: `Dept_ObjectName__c` (e.g. `FIN_Invoice__c`). Prefix by department for clarity.",
+        "component": "Custom Object",
+        "keywords": ["custom object", "object"],
+        "pattern": "BusinessEntity_PEP__c",
+        "example": "Invoice_PEP__c",
+        "guidance": "Use singular PascalCase nouns. Place _PEP before the required final __c API suffix.",
     },
     {
-        "keywords": ["naming convention", "department", "role-based", "field api", "custom field"],
-        "answer": "Q: What's the role-based naming convention for a Field (API)?\n"
-        "A: `deptFieldName__c` (e.g. `finInvoiceDate__c`). Matches the object's department prefix for "
-        "grouping.",
+        "component": "Custom Field",
+        "keywords": ["custom field", "field api", "field"],
+        "pattern": "BusinessMeaning_PEP__c",
+        "example": "InvoiceDate_PEP__c",
+        "guidance": "Use PascalCase API names that state the business meaning. Place _PEP before the required final __c API suffix.",
     },
     {
-        "keywords": ["naming convention", "department", "role-based", "flow", "workflow"],
-        "answer": "Q: What's the role-based naming convention for a Flow?\n"
-        "A: `Dept_Action_Object` (e.g. `FIN_Approve_Invoice`). Easy to search by department.",
+        "component": "Apex Class",
+        "keywords": ["apex class", "apex"],
+        "pattern": "ObjectPurpose_PEP",
+        "example": "InvoiceService_PEP",
+        "guidance": "Use PascalCase. Name the role explicitly, such as Service, Selector, Domain, Controller, Batch, Queueable, or Test; test classes end in _PEPTest.",
     },
     {
-        "keywords": ["naming convention", "department", "role-based", "report"],
-        "answer": "Q: What's the role-based naming convention for a Report?\n"
-        "A: `Dept - Report Name` (e.g. `FIN - Monthly Revenue`). Consistent folder sorting.",
+        "component": "Apex Trigger",
+        "keywords": ["apex trigger", "trigger"],
+        "pattern": "ObjectTrigger_PEP",
+        "example": "InvoiceTrigger_PEP",
+        "guidance": "Use one trigger per object and keep it thin; put event-specific logic in a handler class rather than encoding events in multiple trigger names.",
     },
     {
-        "keywords": ["naming convention", "lifecycle", "environment", "sandbox"],
-        "answer": "Q: What's the lifecycle/environment-based naming convention for a Sandbox? (Useful "
-        "for orgs with multiple sandboxes and deployment stages)\n"
-        "A: `EnvType_Project` (e.g. `DEV_InvoiceApp`), using env types like DEV, UAT, QA, PROD.",
+        "component": "Lightning Web Component",
+        "keywords": ["lightning web component", "lwc"],
+        "pattern": "camelCaseFeaturePep",
+        "example": "invoiceApprovalPanelPep",
+        "guidance": "Use lower camel case for the bundle name. LWC names cannot use _PEP, so use the equivalent Pep suffix; its generated custom-element tag is namespaced automatically.",
     },
     {
-        "keywords": ["naming convention", "lifecycle", "environment", "flow", "workflow"],
-        "answer": "Q: What's the lifecycle/environment-based naming convention for a Flow?\n"
-        "A: `Env_Object_Action` (e.g. `UAT_Invoice_Approval`). Helps track versions per environment.",
+        "component": "Flow",
+        "keywords": ["flow", "workflow", "automation"],
+        "pattern": "Object - Trigger - Action - PEP",
+        "example": "Invoice - Before Save - Set Status - PEP",
+        "guidance": "Use the flow label to identify the object, execution context, outcome, and PEP ownership. Do not include DEV, UAT, or PROD.",
     },
     {
-        "keywords": ["naming convention", "lifecycle", "environment", "apex class"],
-        "answer": "Q: What's the lifecycle/environment-based naming convention for an Apex Class?\n"
-        "A: `Env_ObjectPurpose` (e.g. `QA_InvoiceValidator`). Avoids confusion during testing.",
+        "component": "Validation Rule",
+        "keywords": ["validation rule", "validation"],
+        "pattern": "Object_Condition_PEP",
+        "example": "Invoice_InvoiceDateRequired_PEP",
+        "guidance": "Use a positive, searchable API name that describes the rule being enforced; write the error message in user language separately.",
     },
     {
-        "keywords": ["naming convention", "lifecycle", "environment", "report"],
-        "answer": "Q: What's the lifecycle/environment-based naming convention for a Report?\n"
-        "A: `Env - Report Name` (e.g. `UAT - Invoice Summary`). Clear separation of test vs. live.",
+        "component": "Record Type",
+        "keywords": ["record type"],
+        "pattern": "BusinessProcess_PEP",
+        "example": "PartnerInvoice_PEP",
+        "guidance": "Use a stable business classification, not a department or environment. Keep the developer name and label aligned where practical.",
     },
     {
-        "keywords": ["naming convention", "function-oriented", "process", "flow", "workflow"],
-        "answer": "Q: What's the function-oriented naming convention for a Flow? (Best for "
-        "process-heavy orgs with automation focus)\n"
-        "A: `Process_Object_Action` (e.g. `Approval_Invoice_Manager`). Start with the process type.",
+        "component": "Permission Set",
+        "keywords": ["permission set", "permission"],
+        "pattern": "Persona_Feature_Access_PEP",
+        "example": "Billing_Invoice_Edit_PEP",
+        "guidance": "Describe the persona, feature, access level, and PEP ownership. Prefer permission sets and groups over role- or environment-specific names.",
     },
     {
-        "keywords": ["naming convention", "function-oriented", "process", "validation rule"],
-        "answer": "Q: What's the function-oriented naming convention for a Validation Rule?\n"
-        "A: `Check_Object_Field` (e.g. `Check_Invoice_Date`). Easy to scan in lists.",
+        "component": "Report",
+        "keywords": ["report"],
+        "pattern": "Domain - Audience - Purpose - PEP",
+        "example": "Billing - Finance - Monthly Invoices - PEP",
+        "guidance": "Use report folders for ownership and a label that makes the intended audience and decision clear.",
     },
     {
-        "keywords": ["naming convention", "function-oriented", "process", "trigger"],
-        "answer": "Q: What's the function-oriented naming convention for a Trigger?\n"
-        "A: `Object_Event_Trigger` (e.g. `Invoice_BeforeInsert_Trigger`). Include the event type.",
+        "component": "Dashboard",
+        "keywords": ["dashboard"],
+        "pattern": "Domain - Audience - Purpose - PEP",
+        "example": "Sales - Leadership - Pipeline Health - PEP",
+        "guidance": "Align the dashboard label with its audience and outcome; use folders for access control and organization.",
     },
     {
-        "keywords": ["naming convention", "function-oriented", "process", "dashboard"],
-        "answer": "Q: What's the function-oriented naming convention for a Dashboard?\n"
-        "A: `Function_Audience` (e.g. `Sales_Performance_Exec`). Clarifies purpose and audience.",
+        "component": "Integration",
+        "keywords": ["named credential", "external credential", "integration"],
+        "pattern": "System_Purpose_PEP",
+        "example": "ERP_InvoiceSync_PEP",
+        "guidance": "Name credentials, external services, and integration fields for the external system and business capability, never for an environment or secret.",
+    },
+    {
+        "component": "Page Layout",
+        "keywords": ["page layout", "layout"],
+        "pattern": "Object - Audience - PEP",
+        "example": "Invoice - Billing - PEP",
+        "guidance": "Use a label that identifies the object, audience, and PEP ownership.",
+    },
+    {
+        "component": "Profile",
+        "keywords": ["profile"],
+        "pattern": "Persona_PEP",
+        "example": "StandardUser_PEP",
+        "guidance": "Keep profiles minimal and use permission sets for feature access; use the PEP suffix on any custom profile.",
+    },
+    {
+        "component": "Role",
+        "keywords": ["role hierarchy", "user role", "role"],
+        "pattern": "BusinessUnit_Role_PEP",
+        "example": "Sales_Manager_PEP",
+        "guidance": "Name the business unit and responsibility; do not use environment names.",
+    },
+    {
+        "component": "Sharing Rule",
+        "keywords": ["sharing rule", "sharing"],
+        "pattern": "Object_AccessPurpose_PEP",
+        "example": "Invoice_FinanceRead_PEP",
+        "guidance": "Describe the object and access purpose, not the formula or implementation method.",
+    },
+    {
+        "component": "Email Template",
+        "keywords": ["email template", "email"],
+        "pattern": "BusinessPurpose_PEP",
+        "example": "InvoiceDueReminder_PEP",
+        "guidance": "Name the communication's business purpose and use a folder for ownership and access.",
+    },
+    {
+        "component": "Approval Process",
+        "keywords": ["approval process", "approval"],
+        "pattern": "Object_Process_PEP",
+        "example": "Invoice_Approval_PEP",
+        "guidance": "Identify the object and approval purpose; do not include a dollar threshold that is likely to change.",
+    },
+    {
+        "component": "Custom Metadata Type",
+        "keywords": ["custom metadata type", "custom metadata"],
+        "pattern": "ConfigurationPurpose_PEP__mdt",
+        "example": "InvoiceThreshold_PEP__mdt",
+        "guidance": "Place _PEP before the required final __mdt API suffix and name the configuration purpose, not a specific environment.",
     },
 ]
+
+NAMING_STANDARDS_ANSWER = (
+    "This org's naming standard uses `_PEP` for all supported components. For custom object, field, and "
+    "custom metadata APIs, `_PEP` appears before Salesforce's required final suffix (`__c` or `__mdt`). "
+    "LWC bundle names use `Pep` because underscores are not valid in LWC names. Do not embed environment "
+    "names in deployable metadata.\n\n"
+    "Component | Pattern | Example\n"
+    "--- | --- | ---\n"
+    + "\n".join(
+        f"{standard['component']} | `{standard['pattern']}` | `{standard['example']}`"
+        for standard in NAMING_STANDARDS
+    )
+)
+
+KNOWLEDGE_BASE.append(
+    {
+        "keywords": ["naming standard", "naming standards", "naming convention", "naming conventions"],
+        "answer": NAMING_STANDARDS_ANSWER,
+    }
+)
+
+for standard in NAMING_STANDARDS:
+    KNOWLEDGE_BASE.append(
+        {
+            "keywords": ["naming", "convention", "standard", *standard["keywords"]],
+            "answer": (
+                f"{standard['component']} naming standard:\n"
+                f"Pattern: `{standard['pattern']}`\n"
+                f"Example: `{standard['example']}`\n"
+                f"Guidance: {standard['guidance']}"
+            ),
+        }
+    )
+
+# Common Salesforce components expressed as data so the bot can give developers
+# a definition and example instead of only matching deployment terminology.
+SALESFORCE_COMPONENTS = [
+    {
+        "component": "Custom Object",
+        "keywords": ["custom object", "object"],
+        "definition": "A custom object is a database table you create to store business data that standard Salesforce objects do not cover.",
+        "example": "An Invoice__c object can store invoice number, amount, due date, and its relationship to an Account.",
+    },
+    {
+        "component": "Custom Field",
+        "keywords": ["custom field", "field"],
+        "definition": "A custom field is a column added to a standard or custom object to capture one additional piece of data.",
+        "example": "Invoice__c.InvoiceDate__c can be a Date field that records when an invoice was issued.",
+    },
+    {
+        "component": "Page Layout",
+        "keywords": ["page layout", "layout"],
+        "definition": "A page layout controls which fields, related lists, buttons, and quick actions users see when viewing or editing a record.",
+        "example": "An Invoice page layout can place Amount and Due Date at the top, show Invoice Lines as a related list, and expose a Submit for Approval action.",
+    },
+    {
+        "component": "Record Type",
+        "keywords": ["record type"],
+        "definition": "A record type lets one object support different business processes, picklist values, and page layouts for different users or records.",
+        "example": "An Account can have Customer and Partner record types, each with its own sales process and layout.",
+    },
+    {
+        "component": "Validation Rule",
+        "keywords": ["validation rule"],
+        "definition": "A validation rule prevents a record from being saved when its formula evaluates to true.",
+        "example": "An Invoice validation rule can require DueDate__c when Status__c is Sent.",
+    },
+    {
+        "component": "Flow",
+        "keywords": ["flow", "workflow", "automation"],
+        "definition": "A flow is Salesforce's declarative automation tool for updating data, guiding users through screens, calling actions, and running logic on a schedule or record change.",
+        "example": "A record-triggered flow can set an Invoice status to Overdue when its due date passes and the balance remains unpaid.",
+    },
+    {
+        "component": "Apex Class",
+        "keywords": ["apex class", "apex"],
+        "definition": "An Apex class is server-side Salesforce code that contains reusable business logic.",
+        "example": "InvoiceService can calculate an invoice balance and be called by a flow, Lightning component, or REST endpoint.",
+    },
+    {
+        "component": "Apex Trigger",
+        "keywords": ["apex trigger", "trigger"],
+        "definition": "An Apex trigger runs code before or after records are inserted, updated, deleted, or undeleted.",
+        "example": "InvoiceTrigger can call InvoiceTriggerHandler before insert to populate a default payment term.",
+    },
+    {
+        "component": "Lightning Web Component",
+        "keywords": ["lightning web component", "lwc"],
+        "definition": "A Lightning Web Component is a reusable client-side UI component built with HTML, JavaScript, and CSS for Lightning Experience.",
+        "example": "invoiceApprovalPanel can show invoice details and let an approver approve or reject the record.",
+    },
+    {
+        "component": "Permission Set",
+        "keywords": ["permission set", "permission"],
+        "definition": "A permission set grants additional object, field, app, and system access to users without changing their profile.",
+        "example": "Billing_Invoice_Edit can grant the Billing team edit access to Invoice__c and its Amount__c field.",
+    },
+    {
+        "component": "Profile",
+        "keywords": ["profile"],
+        "definition": "A profile provides each user with baseline login, app, object, and field access; Salesforce recommends keeping profiles minimal and layering access with permission sets.",
+        "example": "A Standard User profile can provide baseline access while a Billing permission set grants invoice-specific permissions.",
+    },
+    {
+        "component": "Role",
+        "keywords": ["role hierarchy", "user role", "role"],
+        "definition": "A role places a user in the role hierarchy, which can extend record visibility upward through the organization.",
+        "example": "A Sales Manager role can allow a manager to see records owned by users in Sales Representative roles below it.",
+    },
+    {
+        "component": "Sharing Rule",
+        "keywords": ["sharing rule", "sharing"],
+        "definition": "A sharing rule automatically grants record access to users in roles, public groups, territories, or queues based on record ownership or criteria.",
+        "example": "A criteria-based rule can share high-value Invoice__c records with the Finance Operations public group.",
+    },
+    {
+        "component": "Report",
+        "keywords": ["report"],
+        "definition": "A report is a configurable query and presentation of Salesforce records that users can filter, group, chart, export, or schedule.",
+        "example": "Monthly Invoices by Account can group Invoice__c records by Account and sum Amount__c for the current month.",
+    },
+    {
+        "component": "Dashboard",
+        "keywords": ["dashboard"],
+        "definition": "A dashboard displays report data as charts, metrics, gauges, or tables for monitoring a business outcome.",
+        "example": "Billing Health can show overdue invoice count, total outstanding balance, and a chart of invoices by status.",
+    },
+    {
+        "component": "Email Template",
+        "keywords": ["email template", "email"],
+        "definition": "An email template is a reusable email message that can merge Salesforce record data into a consistent communication.",
+        "example": "Invoice Due Reminder can greet the Account contact and merge the invoice number and due date.",
+    },
+    {
+        "component": "Approval Process",
+        "keywords": ["approval process", "approval"],
+        "definition": "An approval process routes records through defined approval steps and can update fields, send notifications, or lock records.",
+        "example": "Invoice Approval can require Finance Manager approval before an invoice over $10,000 is sent.",
+    },
+    {
+        "component": "Custom Metadata Type",
+        "keywords": ["custom metadata type", "custom metadata"],
+        "definition": "A custom metadata type stores deployable configuration records that Apex, flows, and formulas can reference.",
+        "example": "InvoiceThreshold__mdt can hold country-specific approval limits deployed with the application.",
+    },
+    {
+        "component": "Named Credential",
+        "keywords": ["named credential", "external credential"],
+        "definition": "A named credential stores an external endpoint and links it to an external credential that manages authentication, so code does not contain secrets.",
+        "example": "ERP_InvoiceSync can let Apex call an ERP API using a configured OAuth principal.",
+    },
+]
+
+for component in SALESFORCE_COMPONENTS:
+    KNOWLEDGE_BASE.append(
+        {
+            "keywords": component["keywords"],
+            "answer_type": "definition",
+            "answer": (
+                f"{component['component']}: {component['definition']}\n\n"
+                f"Example: {component['example']}"
+            ),
+        }
+    )
 
 FALLBACK_ANSWER = (
     "I don't have an answer for that yet. Try rephrasing your question, or ask about change sets, "
     "the Metadata API, managed/unlocked packages, scratch orgs, CI/CD, DevOps Center, permission sets, "
-    "sandboxes, validation deployments, destructive changes, deployment order, or naming conventions."
+    "sandboxes, validation deployments, destructive changes, deployment order, Salesforce components, or "
+    "naming conventions."
 )

@@ -16,6 +16,10 @@ replies with a canned answer. Type `exit` to quit.
 
 ## GitHub Discussions integration ("Guide Me" bot thread)
 
+<p align="center">
+   <img src="assets/guide-me.gif" alt="Animated Guide Me compass" width="112">
+</p>
+
 A single pinned Discussion acts as the entry point to the bot — click into it, post your question as
 a comment, and the bot replies inline in the same thread.
 
