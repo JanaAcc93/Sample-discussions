@@ -190,8 +190,8 @@ NAMING_STANDARDS = [
     {
         "component": "Page Layout",
         "keywords": ["page layout", "layout"],
-        "pattern": "Object - Audience - PEP",
-        "example": "Invoice - Billing - PEP",
+        "pattern": "Object_Audience_PEP",
+        "example": "Invoice_Billing_PEP",
         "guidance": "Use a label that identifies the object, audience, and PEP ownership.",
     },
     {
@@ -290,7 +290,7 @@ SALESFORCE_COMPONENTS = [
         "component": "Page Layout",
         "keywords": ["page layout", "layout"],
         "definition": "A page layout controls which fields, related lists, buttons, and quick actions users see when viewing or editing a record.",
-        "example": "An Invoice page layout can place Amount and Due Date at the top, show Invoice Lines as a related list, and expose a Submit for Approval action.",
+        "example": "Invoice_Billing_PEP",
     },
     {
         "component": "Record Type",
@@ -396,8 +396,8 @@ for component in SALESFORCE_COMPONENTS:
             "keywords": component["keywords"],
             "answer_type": "definition",
             "answer": (
-                f"{component['component']}: {component['definition']}\n\n"
-                f"Example: {component['example']}"
+                f"{component['component']}: {component['definition']} "
+                f"Example: `{component['example']}`"
             ),
         }
     )
